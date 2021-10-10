@@ -12,6 +12,7 @@ from django.http import HttpResponse
 import base64
 import os
 import sys
+import pandas as pd
 from .process import run
 
 sys.path.append(os.getcwd())
@@ -51,3 +52,19 @@ class NumOfSolarCellAPIView(APIView):
             return HttpResponse(content=data, content_type='application/json')
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SolarPower(APIView):
+    def __init__(self):
+        self.base_dir = os.getcwd()
+
+    def post(self, request):
+        # print(request.data)
+
+        csv = self.base_dir + "/media/solar.csv"
+        csv_data = pd.read_csv(csv, sep=',')
+        #csv_data.to_json(self.base_dir+"/media/solar.json", orient="records")
+
+        with open(self.base_dir + "/media/solar.json", 'r') as f:
+            json_data = json.load(f)
+        data = json.dumps(json_data)
+        return HttpResponse(content=data, content_type='application/json')

@@ -7,8 +7,9 @@ Created on Wed Sep 15 00:51:59 2021
 """
 
 from django.urls import path, include
-from .views import NumOfSolarCellAPIView
+from .views import NumOfSolarCellAPIView, SolarPower
 
 urlpatterns=[
-    path("map", NumOfSolarCellAPIView.as_view())
+    path("map", NumOfSolarCellAPIView.as_view()),
+    path("solar",SolarPower.as_view()),
 ]
