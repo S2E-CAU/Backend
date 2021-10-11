@@ -53,6 +53,29 @@ class NumOfSolarCellAPIView(APIView):
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class TestView(APIView):
+    def __init__(self):
+        self.base_dir = os.getcwd()
+
+    def post(self, request):
+        img_path = self.base_dir + "/media/image.jpg"
+        out_dir = self.base_dir + "/media/solarcell.jpg"
+
+        number = run(img_path, out_dir)
+        img64 = convert2base64(out_dir).decode('utf-8')
+
+        data = [
+            {
+                'img': img64,
+                'number': number
+            }
+        ]
+
+        json.dumps(data, cls=DjangoJSONEncoder)
+        return HttpResponse(content=data, content_type='application/json')
+
+
 class SolarPower(APIView):
     def __init__(self):
         self.base_dir = os.getcwd()
