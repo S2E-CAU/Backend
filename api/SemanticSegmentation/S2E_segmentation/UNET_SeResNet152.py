@@ -17,6 +17,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 os.environ["SM_FRAMEWORK"] = "tf.keras"
 
+
 import tensorflow as tf
 from tensorflow import keras
 import segmentation_models as sm
