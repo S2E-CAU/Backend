@@ -62,7 +62,7 @@ class SolarPower(APIView):
 
         csv = self.base_dir + "/media/solar.csv"
         csv_data = pd.read_csv(csv, sep=',')
-        #csv_data.to_json(self.base_dir+"/media/solar.json", orient="records")
+        # csv_data.to_json(self.base_dir+"/media/solar.json", orient="records")
 
         with open(self.base_dir + "/media/solar.json", 'r') as f:
             json_data = json.load(f)
