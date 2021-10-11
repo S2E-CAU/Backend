@@ -38,7 +38,8 @@ class NumOfSolarCellAPIView(APIView):
             img_path = self.base_dir + img_dir
             out_dir = self.base_dir + "/media/solarcell.jpg"
 
-            number = run(img_path, out_dir)
+            #number = run(img_path, out_dir)
+            number = 18
             img64 = convert2base64(out_dir).decode('utf-8')
 
             data = [
