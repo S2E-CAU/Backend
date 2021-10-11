@@ -34,6 +34,7 @@ class NumOfSolarCellAPIView(APIView):
         if file_serializer.is_valid():
             file_serializer.save()
             img_dir = file_serializer.data["file"]
+            print(img_dir)
 
             img_path = self.base_dir + img_dir
             out_dir = self.base_dir + "/media/solarcell.jpg"
