@@ -23,44 +23,14 @@ def convert2base64(img_dir):
         return base64str
 
 
+# 지붕 결과이미지 전송
 class NumOfSolarCellAPIView(APIView):
     def __init__(self):
         self.base_dir = os.getcwd()
 
     def post(self, request):
-        # print(request.data)
-        file_serializer = ImageSerializer(data=request.data)
 
-        if file_serializer.is_valid():
-            file_serializer.save()
-            img_dir = file_serializer.data["file"]
-            print(img_dir)
-
-            img_path = self.base_dir + img_dir
-            out_dir = self.base_dir + "/media/solarcell.jpg"
-
-            number = run(img_path, out_dir)
-            img64 = convert2base64(out_dir).decode('utf-8')
-
-            data = [
-                {
-                    'img': img64,
-                    'number': number
-                }
-            ]
-
-            json.dumps(data, cls=DjangoJSONEncoder)
-            return HttpResponse(content=data, content_type='application/json')
-        else:
-            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class TestView(APIView):
-    def __init__(self):
-        self.base_dir = os.getcwd()
-
-    def post(self, request):
-        img_path = self.base_dir + "/media/image.jpg"
+        img_path = self.base_dir + "/media/dongjak.jpg"
         out_dir = self.base_dir + "/media/solarcell.jpg"
 
         number = run(img_path, out_dir)
@@ -76,7 +46,18 @@ class TestView(APIView):
         json.dumps(data, cls=DjangoJSONEncoder)
         return HttpResponse(content=data, content_type='application/json')
 
+# 주소에 따른 항공사진 전송
+class GetAddressImage(APIView):
+    def __init__(self):
+        self.base_dir = os.getcwd()
 
+    def post(self, request):
+        img = self.base_dir + "/media/dongjak.jpg"
+        img64 = convert2base64(img)
+
+        return HttpResponse(content=img64)
+
+# 태양광 발전량
 class SolarPower(APIView):
     def __init__(self):
         self.base_dir = os.getcwd()
