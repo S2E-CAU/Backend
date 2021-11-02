@@ -52,7 +52,7 @@ class GetAddressImage(APIView):
         self.base_dir = os.getcwd()
 
     def post(self, request):
-        img = self.base_dir + "/media/dongjak.jpg"
+        img = self.base_dir + "/media/house.png"
         img64 = convert2base64(img)
 
         return HttpResponse(content=img64)
