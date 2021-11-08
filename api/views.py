@@ -22,7 +22,6 @@ def convert2base64(img_dir):
         base64str = base64.b64encode(image_file.read())
         return base64str
 
-
 # 지붕 결과이미지 전송
 class NumOfSolarCellAPIView(APIView):
     def __init__(self):
@@ -33,7 +32,14 @@ class NumOfSolarCellAPIView(APIView):
         img_path = self.base_dir + "/media/dongjak.jpg"
         out_dir = self.base_dir + "/media/solarcell.jpg"
 
-        number = run(img_path, out_dir)
+        if request.data == "house1":
+            num = 1
+        elif request.data == "house2":
+            num = 2
+        elif request.data == "house3":
+            num = 3
+
+        number = run(img_path, out_dir, num)
         img64 = convert2base64(out_dir).decode('utf-8')
 
         data = [
@@ -46,13 +52,22 @@ class NumOfSolarCellAPIView(APIView):
         json.dumps(data, cls=DjangoJSONEncoder)
         return HttpResponse(content=data, content_type='application/json')
 
+
 # 주소에 따른 항공사진 전송
 class GetAddressImage(APIView):
     def __init__(self):
         self.base_dir = os.getcwd()
 
     def post(self, request):
-        img = self.base_dir + "/media/house.png"
+        print(request.data)
+
+        if request.data == "house1":
+            img = self.base_dir + "/media/house1.png"
+        elif request.data == "house2":
+            img = self.base_dir + "/media/house2.png"
+        elif request.data == "house3":
+            img = self.base_dir + "/media/house3.png"
+
         img64 = convert2base64(img)
 
         return HttpResponse(content=img64)

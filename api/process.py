@@ -10,12 +10,12 @@ import os
 import cv2
 from api.SemanticSegmentation.S2E_segmentation.full_pipeline import execute
 
-def run(img_dir, save_dir):
+def run(img_dir, save_dir, num):
 
     img = cv2.imread(img_dir)
     mask = cv2.imread(os.getcwd()+'/media/dongjak_mask.jpg')
         
-    result, number =  execute(img, mask)
+    result, number =  execute(img, mask, num)
     
     cv2.imwrite(
             save_dir,

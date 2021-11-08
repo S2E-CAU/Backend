@@ -67,7 +67,7 @@ mask_pth = 'dongjak_mask.jpg'
 # In[14]:
 
 
-def mouse_crop(img, mask, save_dir=None):
+def mouse_crop(img, mask, num):
     # get image and mask
     # use mouse to crop ROI
     # save the cropped ROI for image and mask
@@ -78,63 +78,29 @@ def mouse_crop(img, mask, save_dir=None):
     ix = -1
     iy = -1
     drawing = False
+    #
+    if num == 1:
+        x1=161
+        x2=231
+        y1=239
+        y2=327
 
-    x1=161
-    x2=231
-    y1=239
-    y2=327
-    
-    '''
-    def draw_rectangle_with_drag(event, x, y, flags, param):
-        nonlocal ix, iy, drawing, img, x1,x2,y1,y2
-        if event == cv2.EVENT_LBUTTONDOWN:
-            drawing = True
-            ix = x
-            iy = y
+    if num ==2:
+        x1 = 203
+        x2 = 243
+        y1 = 139
+        y2 = 192
 
-        elif event == cv2.EVENT_MOUSEMOVE:
-            if drawing == True:
-                img2 = cv2.imread(image_pth)
-                cv2.rectangle(img2, pt1=(ix,iy), pt2=(x, y),color=(0,200,255),thickness=3)
-                img = img2
-
-        elif event == cv2.EVENT_LBUTTONUP:
-            drawing = False
-            img2 = cv2.imread(image_pth)
-            cv2.rectangle(img2, pt1=(ix,iy), pt2=(x, y),color=(0,200,255),thickness=3)
-            img = img2
-            x1,x2,y1,y2 = ix, x, iy, y
-
-    cv2.namedWindow(winname= "Use your mouse to select a ROI")
-    cv2.setMouseCallback("Use your mouse to select a ROI", draw_rectangle_with_drag)
-
-    while True:
-        cv2.imshow("Use your mouse to select a ROI", img)
-        k = cv2.waitKey(1)
-        if k == 13: # 13 = Enter
-            break
-            
-        elif k == 27: # 27 = Esc
-            break
-            
-    cv2.destroyAllWindows()
-    '''
-
-    # print('x1 = {}\nx2 = {}\ny1 = {}\ny2 = {}'.format(x1,x2,y1,y2))
-
-    # img2 = cv2.cvtColor(img2,cv2.COLOR_BGR2RGB) # for matplotlib
+    if num==3:
+        x1 = 202
+        x2 = 258
+        y1 = 70
+        y2 = 127
     
     img_crop = img2[y1-1:y2+1, x1-1:x2+1]
    
     mask_crop = mask[y1-1:y2+1, x1-1:x2+1]
-    #fig = plt.figure(figsize=(8, 8))
-    columns = 2
-    rows = 1
-    #fig.add_subplot(rows, columns, 1)
-    #plt.imshow(img_crop)
-    #fig.add_subplot(rows, columns, 2)
-    #plt.imshow(mask_crop)
-    #plt.show()
+
     return img_crop, mask_crop
 
 
@@ -203,17 +169,7 @@ def crop_one_building(img_crop, mask_crop):
     x1, x2, y1, y2 = min(x), max(x), min(y), max(y)
     img_cropped = image[y1-2:y2+2, x1-2:x2+2]
     mask_cropped= mask[y1-2:y2+2, x1-2:x2+2]
-    
-    #fig = plt.figure(figsize=(8, 8))
-    columns = 3
-    rows = 1
-    #fig.add_subplot(rows, columns, 1)
-    #plt.imshow(img_cropped)
-    #fig.add_subplot(rows, columns, 2)
-    #plt.imshow(mask_cropped)
-    #fig.add_subplot(rows, columns, 3)
-    #plt.imshow(mask2)
-    #plt.show()
+
     return img_cropped, mask_cropped
 
 
@@ -256,39 +212,7 @@ def DP_method(mask_cropped):
         else:
             cv2.drawContours(mask_zero, cnts, i, (255, 255, 255), -1)
 
-    #cv2.imshow('contour', mask_zero)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
-    #plt.imshow(mask_zero)
     return mask_zero
-
-
-
-
-# In[10]:
-'''
-
-def visualize(img_cropped, mask_cropped):
-    test_img = img_cropped
-    test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
-    gray_img = mask_cropped
-    gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
-
-    plt.figure(figsize=(8,8))
-    plt.subplot(1,2,1)
-    plt.imshow(test_img, 'gray', interpolation='none')
-    plt.subplot(1,2,2)
-    plt.imshow(test_img, 'gray', interpolation='none')
-    plt.imshow(gray_img, 'Set3', interpolation='none', alpha=0.5) # jet / ocean / gist_earth / terrain
-    # matplotlib.org/stable/tutorials/colors/colormaps.html - See colormaps
-    
-    plt.show()
-
-'''
-
-
-# In[11]:
-
 
 def solar_panel(img_cropped, mask_cropped):
     # draw rectangles on building and visualize
@@ -301,43 +225,38 @@ def solar_panel(img_cropped, mask_cropped):
     mask2 = thresh
 
     number = 0
+    j = 0
 
-    for i in range(mask.shape[1]//5): # x
-        for j in range(mask.shape[0]//10): # y
-            start = (i*5, j*10) # x y
-            end = ((i+1)*5, (j+1)*10) # x y
-            if (mask2[j*10:(j+1)*10, i*5:(i+1)*5] != 0).all():
+    while(j < mask.shape[0]): # y
+        i =0
+        start = (0, j)  # x y
+        end = (11, j+11)  # x y
+
+        while(i < mask.shape[1]): # x
+
+            if (mask2[start[1]:end[1], start[0]:end[0]] != 0).all():
                 cv2.rectangle(mask2, start, end, (100,100,100), 1)
-                cv2.rectangle(mask2, (i*5+1, j*10+1),((i+1)*5-1, (j+1)*10-1), (200,255,255), -1)
-                
-                cv2.rectangle(image2, start, end, (100,100,100), 1)
-                cv2.rectangle(image2, (i*5+1, j*10+1),((i+1)*5-1, (j+1)*10-1), (200,255,255), -1)
+                cv2.rectangle(mask2, (start[0]+1, start[1]+1),(end[0]-1, end[1]-1), (255,255,200), -1)
+
+                print(start)
+
+                start = (start[0]+15, start[1])
+                end = (end[0]+15, end[1])
+                i = end[0]
+
                 number += 1
 
-    for i in range(mask.shape[0]//5):
-        for j in range(mask.shape[1]//10):
-            start = (j*10, i*5)
-            end = ((j+1)*10, (i+1)*5)
-            if ((mask2[i*5:(i+1)*5, j*10:(j+1)*10] != 0).all()) and ((mask2[i*5:(i+1)*5, j*10:(j+1)*10] != 100).all()):
-                cv2.rectangle(mask2, start, end, (101,101,101), 1)
-                cv2.rectangle(mask2, (j*10+1, i*5+1), ((j+1)*10-1, (i+1)*5-1), (200,255,255), -1)
-                
-                cv2.rectangle(image2, start, end, (101,101,101), 1)
-                cv2.rectangle(image2, (j*10+1, i*5+1), ((j+1)*10-1, (i+1)*5-1), (200,255,255), -1)
-                number +=1
+            else:
+                start = (start[0]+1, start[1])
+                end = (end[0]+1, end[1])
+                i = end[0]
+
+        j = end[1]
 
     print(number)
-    #plt.figure(figsize=(8,8))
-    #plt.imshow(mask2)
     
     return mask2, number
-    
-    #plt.figure(figsize=(12,12))
-    #plt.subplot(1,2,1)
-    #plt.imshow(image, 'gray', interpolation='none')
-    #plt.subplot(1,2,2)
-    #plt.imshow(image, 'gray', interpolation='none')
-    #plt.imshow(mask2, 'Set3', interpolation='none', alpha=0.5)
+
     
     # 1. the area of the building using countNonZero
     # 2. number of panels x Pn x Pv = solar potential
@@ -357,30 +276,9 @@ def solar_panel(img_cropped, mask_cropped):
     #solar_potential=Panel*Pn*PV #Pn=kw,태양광 패널의 공칭 용량 / PV=kWh,kWp 출력
 
 
-
-# In[12]:
-
-'''
-img_crop, mask_crop = mouse_crop(image_pth, mask_pth)
-
-mask_crop = mask_clean(mask_crop)
-plt.imshow(mask_crop)
-
-img_cropped, mask_cropped = crop_one_building(img_crop, mask_crop)
-
-mask_cropped = DP_method(mask_cropped)
-
-visualize(img_cropped, mask_cropped)
-
-mask, number = solar_panel(img_cropped, mask_cropped)
-'''
-
-# In[ ]:
-
-
-def execute(img, mask):
+def execute(img, mask,num):
     
-    img_crop, mask_crop = mouse_crop(img, mask)
+    img_crop, mask_crop = mouse_crop(img, mask, num)
     mask_crop = mask_clean(mask_crop)
     img_cropped, mask_cropped = crop_one_building(img_crop, mask_crop)
     mask_cropped = DP_method(mask_cropped)
