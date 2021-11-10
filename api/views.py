@@ -30,14 +30,17 @@ class NumOfSolarCellAPIView(APIView):
     def post(self, request):
 
         img_path = self.base_dir + "/media/dongjak.jpg"
-        out_dir = self.base_dir + "/media/solarcell.jpg"
+
 
         if request.data == "house1":
             num = 1
+            out_dir = self.base_dir + "/media/solarcell1.jpg"
         elif request.data == "house2":
             num = 2
+            out_dir = self.base_dir + "/media/solarcell2.jpg"
         elif request.data == "house3":
             num = 3
+            out_dir = self.base_dir + "/media/solarcell3.jpg"
 
         number = run(img_path, out_dir, num)
         img64 = convert2base64(out_dir).decode('utf-8')
