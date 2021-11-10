@@ -230,7 +230,7 @@ def solar_panel(img_cropped, mask_cropped):
     while(j < mask.shape[0]): # y
         i =0
         start = (0, j)  # x y
-        end = (11, j+11)  # x y
+        end = (10, j+15)  # x y
 
         while(i < mask.shape[1]): # x
 
@@ -238,10 +238,17 @@ def solar_panel(img_cropped, mask_cropped):
                 cv2.rectangle(mask2, start, end, (100,100,100), 1)
                 cv2.rectangle(mask2, (start[0]+1, start[1]+1),(end[0]-1, end[1]-1), (255,255,200), -1)
 
-                print(start)
+                w = start[0]
+                h = start[1]
 
-                start = (start[0]+15, start[1])
-                end = (end[0]+15, end[1])
+
+                while h < end[1]:
+                    cv2.rectangle(mask2, (w, h), (w + 5, h + 3), (100, 100, 100), 1)
+                    cv2.rectangle(mask2, (w + 5, h), (w + 10, h + 3), (100, 100, 100), 1)
+                    h += 3
+
+                start = (start[0]+18, start[1])
+                end = (end[0]+18, end[1])
                 i = end[0]
 
                 number += 1
