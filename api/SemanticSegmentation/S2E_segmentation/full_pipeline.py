@@ -217,8 +217,6 @@ def DP_method(mask_cropped):
 def solar_panel(img_cropped, mask_cropped):
     # draw rectangles on building and visualize
     # from the number of panels get the ammount of potential energy
-    image = img_cropped
-    image2 = image.copy()
     mask = mask_cropped
     mask2 = mask.copy()
     ret, thresh = cv2.threshold(mask2, 100, 255, 0)
@@ -230,7 +228,11 @@ def solar_panel(img_cropped, mask_cropped):
     while(j < mask.shape[0]): # y
         i =0
         start = (0, j)  # x y
-        end = (10, j+15)  # x y
+        end = (10, j+9)  # x y
+
+        if start[1]!=0:
+            start = (start[0], start[1]+1)
+            end = (end[0], end[1]+1)
 
         while(i < mask.shape[1]): # x
 
@@ -246,6 +248,7 @@ def solar_panel(img_cropped, mask_cropped):
                     cv2.rectangle(mask2, (w, h), (w + 5, h + 3), (100, 100, 100), 1)
                     cv2.rectangle(mask2, (w + 5, h), (w + 10, h + 3), (100, 100, 100), 1)
                     h += 3
+
 
                 start = (start[0]+18, start[1])
                 end = (end[0]+18, end[1])
